@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+
+    <title>Digital Life 2</title>
+    <style>
+        #canvas {
+            border: 2px solid grey;
+        }
+    </style>
+</head>
+<body>
+
+<canvas id="canvas"  width="640" height="480"></canvas>
+<script type="module">
+    import init, {Universe} from "./pkg/artlife.js";
+    async function main() {
+        await init();
+        try {
+            if (!Universe) {
+                console.error("Universe is not defined. The WASM module may not have loaded correctly.");
+                return;
+            }
+
+            const universe = Universe.new();
+
+            if (!universe) {
+                console.error("Failed to create a new Universe instance.");
+                return;
+            }
+
+            const renderLoop = () => {
+                universe.tick();
+                requestAnimationFrame(renderLoop);
+            };
+
+            requestAnimationFrame(renderLoop);
+        } catch (error) {
+            console.error("An error occurred while initializing the WASM module:", error);
+        }
+    }
+
+    main();
+
+</script>
+</body>
+</html>
